@@ -1,0 +1,21 @@
+# Ignore Python cache
+__pycache__/
+*.pyc
+
+# Ignore environment files
+.env
+*.env
+
+# Ignore SSH keys and secrets
+pics
+pics.pub
+*.key
+*.pem
+
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
