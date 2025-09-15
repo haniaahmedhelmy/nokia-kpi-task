@@ -1,0 +1,15 @@
+fastapi
+uvicorn[standard]
+pydantic
+python-dotenv
+pandas
+numpy
+XlsxWriter
+python-pptx
+APScheduler
+email-validator
+python-jose
+passlib[bcrypt]
+asyncpg
+openpyxl
+pytz

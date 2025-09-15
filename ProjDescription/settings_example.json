@@ -1,0 +1,10 @@
+{
+	"days_back":120,
+	"frequency": "daily",
+	"time":"",
+	"days":[],
+	"mailing_list":"email001;email002",
+	"line_chart": "",
+	"bar_chart" : ""
+	
+}
