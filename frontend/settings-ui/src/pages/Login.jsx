@@ -2,12 +2,18 @@ import { Box, TextField, Button, Typography, Paper } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api";
 import { useState, useEffect } from "react";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
 
 export default function Login() {
   const nav = useNavigate();
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
   const [err, setErr] = useState("");
+  const [showPw, setShowPw] = useState(false);
+
 
   const sentences = [
     "Nokia helps you realize your digital potential with networking technology that provides superior performance.",
@@ -109,13 +115,28 @@ export default function Login() {
 
           <Paper elevation={4} sx={{ p: 1, borderRadius: 2 }}>
             <TextField
-              fullWidth
-              label="Password"
-              type="password"
-              value={pw}
-              required
-              onChange={(e) => setPw(e.target.value)}
-            />
+  fullWidth
+  label="Password"
+  type={showPw ? "text" : "password"}
+  value={pw}
+  required
+  onChange={(e) => setPw(e.target.value)}
+  slotProps={{
+    input: {
+      endAdornment: (
+        <InputAdornment position="end">
+          <IconButton
+            onClick={() => setShowPw((prev) => !prev)}
+            edge="end"
+          >
+            {showPw ? <VisibilityOff /> : <Visibility />}
+          </IconButton>
+        </InputAdornment>
+      ),
+    },
+  }}
+/>
+
           </Paper>
 
           {err && <Typography color="error">{err}</Typography>}

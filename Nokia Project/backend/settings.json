@@ -1,0 +1,19 @@
+{
+  "days_back": 7,
+  "frequency": "daily",
+  "time": "13:00",
+  "days": [],
+  "mailing_list": "haniahelmy20@gmail.com",
+  "line_chart": {
+    "type": "list",
+    "value": [
+      "kpi007",
+      "kpi008",
+      "kpi009"
+    ]
+  },
+  "bar_chart": {
+    "type": "equation",
+    "value": "kpi001 + kpi002 + kpi003 + kpi004 + (kpi005/1000) +(kpi006/1000)"
+  }
+}

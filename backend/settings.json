@@ -1,16 +1,14 @@
 {
   "days_back": 7,
-  "frequency": "daily",
-  "time": "22:15",
-  "days": [],
-  "mailing_list": "haniahelmy20@gmail.com;ziadwassef@hotmail.com",
+  "frequency": "weekly",
+  "time": "14:17",
+  "days": [
+    "Fri"
+  ],
+  "mailing_list": "haniahelmy20@gmail.com",
   "line_chart": {
-    "type": "list",
-    "value": [
-      "kpi007",
-      "kpi008",
-      "kpi009"
-    ]
+    "type": "equation",
+    "value": "kpi999"
   },
   "bar_chart": {
     "type": "equation",

@@ -30,7 +30,7 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import SendIcon from "@mui/icons-material/Send";
 import ScheduleIcon from "@mui/icons-material/Schedule";
-
+import AddIcon from '@mui/icons-material/Add';
 export default function Settings() {
   const steps = ["Days Back", "Time", "Frequency", "Mailing List", "Line Chart", "Bar Chart"];
   const [completed, setCompleted] = useState([false, false, false, false, false, false]);
@@ -81,19 +81,27 @@ export default function Settings() {
     setTimeout(() => setAlertOpen(false), 4000);
   }
 
-  const handleEmailAdd = (e) => {
-    if (e.key === "Enter" && emailInput.trim() !== "") {
-      const regex = /^[a-zA-Z0-9._%+-]+$/;
-      if (!regex.test(emailInput)) {
-        setEmailError("Invalid email username");
-        return;
-      }
-      const newEmail = emailInput + domain;
-      setEmails((prev) => [...prev, newEmail]);
-      setEmailInput("");
-      setEmailError("");
+  // New reusable function
+const addEmail = () => {
+  if (emailInput.trim() !== "") {
+    const regex = /^[a-zA-Z0-9._%+-]+$/;
+    if (!regex.test(emailInput)) {
+      setEmailError("Invalid email username");
+      return;
     }
-  };
+    const newEmail = emailInput + domain;
+    setEmails((prev) => [...prev, newEmail]);
+    setEmailInput("");
+    setEmailError("");
+  }
+};
+
+const handleEmailAdd = (e) => {
+  if (e.key === "Enter") {
+    addEmail();
+  }
+};
+
 
   const handleEmailDelete = (emailToDelete) => {
     setEmails((prev) => prev.filter((email) => email !== emailToDelete));
@@ -111,7 +119,7 @@ export default function Settings() {
   }, [daysBack, time]);
 
   useEffect(() => {
-    const eqRegex = /^(\s*(\(*\s*(kpi\d{3}|\d+)\s*\)*)(\s*[-+*/]\s*(\(*\s*(kpi\d{3}|\d+)\s*\)*))*)$/;
+const eqRegex = /^(\s*(\(*\s*(kpi00[1-9]|\d+)\s*\)*)(\s*[-+*/]\s*(\(*\s*(kpi00[1-9]|\d+)\s*\)*))*)$/;
     if (lineType === "equation" && lineEquation && !eqRegex.test(lineEquation)) {
       setLineEqError("Invalid equation.");
     } else setLineEqError("");
@@ -171,6 +179,8 @@ export default function Settings() {
     fetchSettings();
   }, []);
 
+
+//key 
   useEffect(() => {
     async function saveSettings() {
       try {
@@ -241,12 +251,33 @@ export default function Settings() {
 
               {(frequency === "weekly" || frequency === "monthly") && (
                 <>
-                  <TextField fullWidth label="Day" placeholder="Enter the day" value={day} onChange={(e) => setDay(e.target.value)} margin="normal" />
-                  {frequency === "weekly" && (
-                    <Typography variant="body2" color="text.secondary" sx={{ mt: 1, textAlign: "center" }}>
-                      0 = Monday · 1 = Tuesday · 2 = Wednesday · 3 = Thursday · 4 = Friday · 5 = Saturday · 6 = Sunday
-                    </Typography>
-                  )}
+{frequency === "monthly" && (
+  <TextField
+    fullWidth
+    label="Day"
+    placeholder="Enter the date (e.g. 15)"
+    value={day}
+    onChange={(e) => setDay(e.target.value)}
+    margin="normal"
+  />
+)}                  {frequency === "weekly" && (
+  <>
+    <TextField
+      fullWidth
+      label="Day"
+      placeholder="Mon, Tue, Wed..."
+      value={day}
+      onChange={(e) => setDay(e.target.value)}
+      margin="normal"
+      error={day && !["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].includes(day)}
+      helperText={
+        day && !["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].includes(day)
+          ? "Use 3-letter abbreviations (Mon, Tue, Wed, Thu, Fri, Sat, Sun)"
+          : "Enter the day as 3-letter abbreviation (e.g., Mon, Tue, Wed)"
+      }
+    />
+  </>
+)}
                 </>
               )}
             </>
@@ -263,6 +294,9 @@ export default function Settings() {
                     <MenuItem value="@hotmail.com">@hotmail.com</MenuItem>
                   </Select>
                 </FormControl>
+                <IconButton onClick={addEmail} color="primary">
+    <AddIcon />
+  </IconButton>
               </Box>
 
               <Box sx={{ mt: 2, display: "flex", gap: 1, flexWrap: "wrap" }}>
@@ -318,22 +352,17 @@ export default function Settings() {
           )}
 
           {activeStep === 6 && (
-            <Box sx={{ textAlign: "center", mt: 1 }}>
-              <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-      1. Make sure Excel is in the style/format you intend to send it in,then press   {"  "} 
-      <SaveAltIcon sx={{ verticalAlign: "middle", color: "#BEC0C4" }}  />
-       
-    </Typography>
-
-    <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-      2. Choose how to proceed
+            <Box sx={{ textAlign: "center", mt: 0 }}>
+              
+    <Typography variant="body1" color="text.secondary" sx={{ mb: 1 }}>
+      - If you need the email sent right away, press this button. This will not affect the scheduled send.
     </Typography>
 
               <Box sx={{ display: "flex", justifyContent: "center", gap: 3 }}>
                 <Button
                   variant="contained"
                   startIcon={<SendIcon />}
-                  sx={{ bgcolor: activeBtn === "send" ? "#56995B" : "#999", color: "#fff", fontWeight: 600, borderRadius: 2, "&:hover": { bgcolor: activeBtn === "send" ? "#56995B" : "#777" } }}
+                  sx={{ bgcolor: activeBtn === "send" ? "#56995B" : "#C4C8CC", color: "#fff", fontWeight: 600, borderRadius: 2, "&:hover": { bgcolor: activeBtn === "send" ? "#56995B" : "#777" } }}
                   onClick={async () => {
                     setActiveBtn("send");
                     try {
@@ -348,22 +377,7 @@ export default function Settings() {
                   Send Email Now
                 </Button>
 
-                <Button
-                  variant="contained"
-                  startIcon={<ScheduleIcon />}
-                  sx={{ bgcolor: activeBtn === "schedule" ? "#56995B" : "#999", color: "#fff", fontWeight: 600, borderRadius: 2, "&:hover": { bgcolor: activeBtn === "schedule" ? "#56995B" : "#777" } }}
-                  onClick={async () => {
-                    setActiveBtn("schedule");
-                    try {
-                      const res = await api.scheduleEmail();
-                      showAlert("success", res.message);
-                    } catch (e) {
-                      showAlert("error", e.message);
-                    }
-                  }}
-                >
-                  Schedule Send
-                </Button>
+                
               </Box>
             </Box>
           )}
@@ -374,21 +388,7 @@ export default function Settings() {
             <ArrowBackIosNewIcon />
           </IconButton>
 
-          <Tooltip title="Save PowerPoint">
-            <IconButton
-              sx={{ bgcolor: "transparent", borderRadius: 2, "&:hover": { bgcolor: "#f0f0f0" } }}
-              onClick={async () => {
-                try {
-                  const res = await api.exportPpt();
-                  showAlert("success", `PowerPoint exported:\n${res.ppt_path}`);
-                } catch (e) {
-                  showAlert("error", "Failed to export PowerPoint: " + e.message);
-                }
-              }}
-            >
-              <SaveAltIcon />
-            </IconButton>
-          </Tooltip>
+         
 
           <IconButton onClick={() => setActiveStep((prev) => Math.min(prev + 1, 6))} disabled={activeStep === 6}>
             <ArrowForwardIosIcon />
